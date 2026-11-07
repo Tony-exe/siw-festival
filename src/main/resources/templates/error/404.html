@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(#{errore.404.titolo})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="pagina-errore">
+    <h1>404</h1>
+    <!-- "messaggio" arriva dal nostro GlobalExceptionHandler; altrimenti testo preso da messages.properties -->
+    <p th:text="${messaggio} ?: #{errore.404.testo}">La pagina che cerchi non esiste.</p>
+    <a th:href="@{/}" class="pulsante" th:text="#{errore.torna}">Torna alla home</a>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

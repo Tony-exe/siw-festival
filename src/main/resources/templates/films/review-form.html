@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Modifica recensione')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="stretta">
+    <h1>Modifica recensione</h1>
+    <p class="nota" th:text="${film.titolo}">Titolo del film</p>
+
+    <form th:action="@{/films/{filmId}/reviews/{id}(filmId=${film.id}, id=${recensione.id})}"
+          th:object="${recensione}" method="post" novalidate>
+
+        <!-- Campi voto e testo: frammento riusato anche dal form di inserimento in films/show.html -->
+        <th:block th:fragment="campiRecensione">
+            <label for="voto">Voto</label>
+            <select th:field="*{voto}" th:errorclass="campo-errore">
+                <option value="">Scegli…</option>
+                <option th:each="v : ${#numbers.sequence(5, 1, -1)}" th:value="${v}"
+                        th:text="${#strings.repeat('★', v)} + ' (' + ${v} + ')'">★★★★★ (5)</option>
+            </select>
+            <span class="errore-campo" th:if="${#fields.hasErrors('voto')}" th:errors="*{voto}">Errore</span>
+
+            <label for="testo">Testo</label>
+            <textarea th:field="*{testo}" rows="4" th:errorclass="campo-errore"></textarea>
+            <span class="errore-campo" th:if="${#fields.hasErrors('testo')}" th:errors="*{testo}">Errore</span>
+        </th:block>
+
+        <button type="submit">Salva</button>
+        <a th:href="@{/films/{id}(id=${film.id})}">Annulla</a>
+    </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

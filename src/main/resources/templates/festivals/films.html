@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Film · ' + ${festival.nome})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <p class="percorso">
+        <a th:href="@{/festivals}">Festival</a> /
+        <a th:href="@{/festivals/{id}(id=${festival.id})}" th:text="${festival.nome}">Festival</a> / Film
+    </p>
+
+    <h1>Film partecipanti</h1>
+    <p th:if="${#lists.isEmpty(films)}" class="nota">Nessun film associato a questo festival.</p>
+
+    <div class="griglia">
+        <!-- Dettaglio film con le recensioni (pagina Thymeleaf) -->
+        <a th:each="film : ${films}" th:href="@{/films/{id}(id=${film.id})}" class="scheda">
+            <h3 th:text="${film.titolo}">Titolo</h3>
+            <!-- film.regista è già inizializzato (JOIN FETCH nel repository): niente LazyInitializationException -->
+            <p class="nota">di <span th:text="${film.regista.nome + ' ' + film.regista.cognome}">Regista</span></p>
+            <p>
+                <span th:text="${film.anno}">1972</span> · <span th:text="${film.genere}">Genere</span> ·
+                <span th:text="${film.durata}">120</span> min · <span th:text="${film.paeseProduzione}">Paese</span>
+            </p>
+            <span>Dettaglio e recensioni →</span>
+        </a>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

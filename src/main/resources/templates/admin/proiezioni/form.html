@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Modifica proiezione')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="stretta">
+    <p class="percorso">
+        <a th:href="@{/admin/festivals}">Festival</a> /
+        <a th:href="@{/admin/festivals/{id}/proiezioni(id=${proiezione.festival.id})}"
+           th:text="${proiezione.festival.nome}">Festival</a> / Modifica proiezione
+    </p>
+    <h1>Modifica proiezione</h1>
+    <p class="nota">
+        <strong th:text="${proiezione.film.titolo}">Film</strong>
+        (<span th:text="${proiezione.film.durata}">120</span> min). Si possono cambiare sala, data e ora.
+    </p>
+
+    <form th:action="@{/admin/proiezioni/{id}(id=${proiezione.id})}" th:object="${form}" method="post" novalidate>
+        <div th:replace="~{fragments/layout :: erroriGlobali}"></div>
+        <!-- Select della sala, riusata anche dal form di programmazione -->
+        <th:block th:fragment="selectSala">
+            <label for="salaId">Sala</label>
+            <select id="salaId" name="salaId" required>
+                <option value="">— scegli la sala —</option>
+                <option th:each="sala : ${sale}" th:value="${sala.id}"
+                        th:text="${sala.nome + ' (' + sala.capienza + ' posti)'}"
+                        th:selected="${salaId != null and salaId == sala.id}">Sala</option>
+            </select>
+        </th:block>
+        <th:block th:replace="~{fragments/layout :: campo('data', 'Data', 'date')}"></th:block>
+        <th:block th:replace="~{fragments/layout :: campo('ora', 'Ora di inizio', 'time')}"></th:block>
+
+        <button type="submit">Salva</button>
+        <a th:href="@{/admin/festivals/{id}/proiezioni(id=${proiezione.festival.id})}">Annulla</a>
+    </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

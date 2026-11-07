@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Gestione film')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+    <div class="titolo-pagina">
+        <h1>Film</h1>
+        <a th:href="@{/admin/films/new}" class="pulsante">Nuovo film</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr><th>Titolo</th><th>Regista</th><th>Anno</th><th>Genere</th><th>Durata</th><th>Azioni</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="film : ${films}">
+            <td><a th:href="@{/films/{id}(id=${film.id})}" th:text="${film.titolo}">Titolo</a></td>
+            <td th:text="${film.regista.nome + ' ' + film.regista.cognome}">Regista</td>
+            <td th:text="${film.anno}">Anno</td>
+            <td th:text="${film.genere}">Genere</td>
+            <td th:text="${film.durata} + ' min'">120 min</td>
+            <td class="azioni">
+                <a th:href="@{/admin/films/{id}/edit(id=${film.id})}">Modifica</a>
+                <a th:href="@{/admin/films/{id}/cast(id=${film.id})}">Cast</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

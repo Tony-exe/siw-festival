@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Registrati')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="stretta">
+    <h1>Registrati</h1>
+
+    <form th:action="@{/register}" th:object="${utente}" method="post" novalidate>
+        <th:block th:replace="~{fragments/layout :: campo('username', 'Username', 'text')}"></th:block>
+        <th:block th:replace="~{fragments/layout :: campo('password', 'Password', 'password')}"></th:block>
+        <button type="submit">Crea account</button>
+    </form>
+
+    <p>Hai già un account? <a th:href="@{/login}">Accedi</a></p>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

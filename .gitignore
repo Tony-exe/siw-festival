@@ -1,0 +1,32 @@
+# ===== Build e dipendenze (si rigenerano con ./mvnw package) =====
+target/
+node_modules/
+frontend/dist/
+frontend/node/
+# la build di React viene scritta qui da Vite / frontend-maven-plugin
+src/main/resources/static/app/
+
+# ===== IDE e strumenti personali =====
+.idea/
+*.iml
+.vscode/
+.claude/
+.obsidian/
+
+# ===== File di sistema, log, segreti =====
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+
+# ===== Documenti di lavoro locali: non fanno parte del progetto pubblicato =====
+siw-progetto-2026-novembre.pdf
+PROGETTO.md
+DECISIONI.md
+GUIDA_AL_CODICE.md
+PIANO_MODIFICHE.md
+# slide del corso e altri progetti, se finiscono per sbaglio nella cartella
+SLIDE/
+Siw progetto personale/
+Materiale SIW*/

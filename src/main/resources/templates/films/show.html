@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(${film.titolo})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+    <p class="percorso"><a th:href="@{/festivals}">Festival</a> / <span th:text="${film.titolo}">Film</span></p>
+
+    <!-- Dati del film: regista e cast sono già caricati dal service (JOIN FETCH) -->
+    <h1 th:text="${film.titolo}">Titolo</h1>
+    <p class="nota">
+        <span th:text="${film.anno}">1972</span> · <span th:text="${film.genere}">Genere</span> ·
+        <span th:text="${film.durata}">120</span> min · <span th:text="${film.paeseProduzione}">Paese</span>
+    </p>
+    <p>
+        <strong>Regia:</strong>
+        <span th:text="${film.regista.nome + ' ' + film.regista.cognome}">Regista</span>
+        <span th:if="${film.regista.nazionalita}" class="nota"
+              th:text="'(' + ${film.regista.nazionalita} + ')'">(Nazionalità)</span>
+    </p>
+
+    <div class="colonne">
+        <section>
+            <h2>Cast</h2>
+            <p th:if="${#lists.isEmpty(film.interpretazioni)}" class="nota">Cast non disponibile.</p>
+            <ul>
+                <li th:each="i : ${film.interpretazioni}">
+                    <span th:text="${i.attore.nome + ' ' + i.attore.cognome}">Attore</span>
+                    <span class="nota" th:text="${i.personaggio}">Personaggio</span>
+                </li>
+            </ul>
+
+            <h2>Festival</h2>
+            <p th:if="${#lists.isEmpty(festivals)}" class="nota">Non partecipa a nessun festival.</p>
+            <ul>
+                <li th:each="f : ${festivals}">
+                    <a th:href="@{/festivals/{id}(id=${f.id})}" th:text="${f.nome}">Festival</a>
+                    <span class="nota" th:text="${f.citta}">Città</span>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Proiezioni</h2>
+            <p th:if="${#lists.isEmpty(proiezioni)}" class="nota">Nessuna proiezione in programma.</p>
+            <ul>
+                <li th:each="p : ${proiezioni}">
+                    <span th:classappend="${p.stato.name() == 'CANCELLED'} ? 'annullata'">
+                        <span th:text="${#temporals.format(p.data, 'dd/MM/yyyy')}">01/01/2026</span>,
+                        <span th:text="${#temporals.format(p.ora, 'HH:mm')}">18:00</span> ·
+                        <span th:text="${p.sala.nome}">Sala</span>
+                    </span>
+                    <!-- Il programma delle proiezioni è la pagina React -->
+                    <a th:href="@{/app/festivals/{id}/screenings(id=${p.festival.id})}"
+                       th:text="${p.festival.nome}">Festival</a>
+                    <span th:if="${p.stato.name() != 'SCHEDULED'}"
+                          th:class="'stato ' + ${#strings.toLowerCase(p.stato)}" th:text="${p.stato}">STATO</span>
+                </li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Recensioni -->
+    <h2>
+        Recensioni
+        <span class="nota" th:if="${mediaVoti != null}">
+            media <span th:text="${#numbers.formatDecimal(mediaVoti, 1, 1)}">4,5</span> / 5
+            (<span th:text="${#lists.size(recensioni)}">3</span>)
+        </span>
+    </h2>
+
+    <!-- Form di inserimento: solo per chi è autenticato e non ha ancora recensito il film -->
+    <div sec:authorize="isAuthenticated()" th:unless="${giaRecensito}" class="riquadro">
+        <h3>Scrivi una recensione</h3>
+        <form th:action="@{/films/{id}/reviews(id=${film.id})}" th:object="${recensione}" method="post" novalidate>
+            <div th:replace="~{fragments/layout :: erroriGlobali}"></div>
+            <th:block th:replace="~{films/review-form :: campiRecensione}"></th:block>
+            <button type="submit">Pubblica</button>
+        </form>
+    </div>
+    <p sec:authorize="isAnonymous()" class="nota">
+        <a th:href="@{/login}">Accedi</a> per scrivere una recensione.
+    </p>
+
+    <p th:if="${#lists.isEmpty(recensioni)}" class="nota">Ancora nessuna recensione.</p>
+    <ul>
+        <li th:each="r : ${recensioni}">
+            <strong th:text="${r.utente.username}">utente</strong>
+            <span class="stelle" th:text="${#strings.repeat('★', r.voto) + #strings.repeat('☆', 5 - r.voto)}">★★★★☆</span>
+            <span class="nota" th:text="${#temporals.format(r.data, 'dd/MM/yyyy')}">01/01/2026</span>
+            <p class="testo-recensione" th:text="${r.testo}">Testo della recensione</p>
+
+            <!-- Comandi solo sulle proprie recensioni. È solo comodità: il controllo vero è nel service (403) -->
+            <div class="azioni" th:if="${#authentication.name == r.utente.username}">
+                <a th:href="@{/films/{filmId}/reviews/{id}/edit(filmId=${film.id}, id=${r.id})}">Modifica</a>
+                <!-- Eliminazione = POST con token CSRF (aggiunto da th:action), con conferma del browser -->
+                <form th:action="@{/films/{filmId}/reviews/{id}/delete(filmId=${film.id}, id=${r.id})}" method="post"
+                      onsubmit="return confirm('Eliminare la recensione?');">
+                    <button type="submit">Elimina</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

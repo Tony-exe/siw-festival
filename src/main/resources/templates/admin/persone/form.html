@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${titolo})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="stretta">
+    <h1 th:text="${titolo}">Persona</h1>
+
+    <form th:action="${personaId} == null ? @{__${base}__} : @{__${base}__/{id}(id=${personaId})}"
+          th:object="${persona}" method="post" novalidate>
+        <th:block th:replace="~{fragments/layout :: campo('nome', 'Nome', 'text')}"></th:block>
+        <th:block th:replace="~{fragments/layout :: campo('cognome', 'Cognome', 'text')}"></th:block>
+        <th:block th:replace="~{fragments/layout :: campo('dataNascita', 'Data di nascita', 'date')}"></th:block>
+        <th:block th:replace="~{fragments/layout :: campo('nazionalita', 'Nazionalità', 'text')}"></th:block>
+        <button type="submit">Salva</button>
+        <a th:href="@{__${base}__}">Annulla</a>
+    </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

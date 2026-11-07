@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${filmId} == null ? 'Nuovo film' : 'Modifica film')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="stretta">
+    <h1 th:text="${filmId} == null ? 'Nuovo film' : 'Modifica film'">Film</h1>
+
+    <form th:action="${filmId} == null ? @{/admin/films} : @{/admin/films/{id}(id=${filmId})}"
+          th:object="${film}" method="post" novalidate>
+        <div th:replace="~{fragments/layout :: erroriGlobali}"></div>
+
+        <th:block th:replace="~{fragments/layout :: campo('titolo', 'Titolo', 'text')}"></th:block>
+        <th:block th:replace="~{fragments/layout :: campo('anno', 'Anno', 'number')}"></th:block>
+        <th:block th:replace="~{fragments/layout :: campo('durata', 'Durata (minuti)', 'number')}"></th:block>
+        <th:block th:replace="~{fragments/layout :: campo('genere', 'Genere', 'text')}"></th:block>
+        <th:block th:replace="~{fragments/layout :: campo('paeseProduzione', 'Paese di produzione', 'text')}"></th:block>
+
+        <label for="registaId">Regista</label>
+        <select id="registaId" name="registaId" required th:classappend="${#fields.hasErrors('regista')} ? 'campo-errore'">
+            <option value="">— scegli il regista —</option>
+            <option th:each="regista : ${registi}" th:value="${regista.id}"
+                    th:text="${regista.cognome + ' ' + regista.nome}"
+                    th:selected="${registaId != null and registaId == regista.id}">Regista</option>
+        </select>
+        <span class="errore-campo" th:if="${#fields.hasErrors('regista')}" th:errors="*{regista}"></span>
+        <p class="nota">Non c'è? <a th:href="@{/admin/registi/new}">Inserisci un nuovo regista</a>.</p>
+
+        <button type="submit">Salva</button>
+        <a th:href="@{/admin/films}">Annulla</a>
+    </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

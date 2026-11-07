@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--
+  Frammenti comuni a tutte le pagine. Ogni pagina li include con th:replace, ad esempio:
+    <head th:replace="~{fragments/layout :: head('Titolo')}"></head>
+  Così head, header e footer sono scritti una volta sola. head(titolo) è un frammento parametrico.
+  I testi fissi sono espressioni #{chiave}: il valore sta in messages/messages*.properties (una lingua per file).
+  Lo stile è tutto in static/css/app.css (nessun framework CSS).
+-->
+<html lang="it" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="head(titolo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titolo} + ' · Festival'">Festival</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body>
+
+<!-- Header: le voci cambiano in base al ruolo grazie a sec:authorize.
+     sec:authorize legge direttamente il SecurityContext: funziona anche nelle pagine di errore,
+     dove gli attributi @ModelAttribute dei @ControllerAdvice (es. userDetails) non ci sono. -->
+<header th:fragment="header">
+    <a class="logo" th:href="@{/}">🎬 Festival</a>
+    <nav>
+        <a th:href="@{/festivals}" th:text="#{navbar.festival}">Festival</a>
+
+        <!-- solo admin -->
+        <a th:href="@{/admin}" sec:authorize="hasAuthority('ADMIN')" th:text="#{navbar.gestione}">Gestione</a>
+        <a th:href="@{/admin/festivals}" sec:authorize="hasAuthority('ADMIN')">Festival e proiezioni</a>
+        <a th:href="@{/admin/films}" sec:authorize="hasAuthority('ADMIN')">Film e cast</a>
+        <a th:href="@{/admin/sale}" sec:authorize="hasAuthority('ADMIN')">Sale</a>
+
+        <!-- non autenticati -->
+        <a th:href="@{/login}" sec:authorize="isAnonymous()" th:text="#{navbar.accedi}">Accedi</a>
+        <a th:href="@{/register}" sec:authorize="isAnonymous()" th:text="#{navbar.registrati}">Registrati</a>
+
+        <!-- autenticati: il logout è un POST con token CSRF (aggiunto da th:action), non un link -->
+        <span sec:authorize="isAuthenticated()" th:text="'Ciao, ' + ${#authentication.name}">Ciao, utente</span>
+        <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+            <button type="submit" th:text="#{navbar.esci}">Esci</button>
+        </form>
+    </nav>
+</header>
+
+<!-- Messaggi flash: impostati dai controller con RedirectAttributes.addFlashAttribute -->
+<th:block th:fragment="flash">
+    <p th:if="${successo}" class="messaggio" th:text="${successo}">Operazione completata</p>
+    <p th:if="${errore}" class="errore" th:text="${errore}">Errore</p>
+</th:block>
+
+<!--
+  Campo di un form legato a th:object: etichetta, input ed eventuale errore.
+  È un th:block, quindi i tre elementi finiscono direttamente dentro il <form> (che li mette in colonna).
+  __${nome}__ è una pre-elaborazione: il nome del campo viene sostituito prima di valutare *{...}.
+-->
+<th:block th:fragment="campo(nome, etichetta, tipo)">
+    <label th:for="${nome}" th:text="${etichetta}">Etichetta</label>
+    <input th:type="${tipo}" th:field="*{__${nome}__}" th:errorclass="campo-errore">
+    <span class="errore-campo" th:if="${#fields.hasErrors(nome)}" th:errors="*{__${nome}__}">Errore</span>
+</th:block>
+
+<!-- Errori non legati a un campo (es. regole di business segnalate dal service) -->
+<div th:fragment="erroriGlobali" th:if="${#fields.hasGlobalErrors()}" class="errore">
+    <div th:each="messaggio : ${#fields.globalErrors()}" th:text="${messaggio}">Errore</div>
+</div>
+
+<footer th:fragment="footer" th:text="#{footer.testo}">
+    Sistemi Informativi su Web · Roma Tre · Progetto festival cinematografici
+</footer>
+
+</body>
+</html>

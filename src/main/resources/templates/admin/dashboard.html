@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Gestione')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+    <h1>Pannello di gestione</h1>
+    <div class="griglia">
+        <a th:href="@{/admin/festivals}" class="scheda">
+            <h3>Festival e proiezioni</h3>
+            <p class="nota">Crea e modifica festival, associa i film, programma le proiezioni.</p>
+        </a>
+        <a th:href="@{/admin/films}" class="scheda">
+            <h3>Film e cast</h3>
+            <p class="nota">Inserisci e modifica film, regista e interpretazioni.</p>
+        </a>
+        <a th:href="@{/admin/sale}" class="scheda">
+            <h3>Sale</h3>
+            <p class="nota">Le sale in cui si svolgono le proiezioni.</p>
+        </a>
+        <a th:href="@{/admin/registi}" class="scheda">
+            <h3>Registi</h3>
+            <p class="nota">Anagrafica dei registi.</p>
+        </a>
+        <a th:href="@{/admin/attori}" class="scheda">
+            <h3>Attori</h3>
+            <p class="nota">Anagrafica degli attori.</p>
+        </a>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

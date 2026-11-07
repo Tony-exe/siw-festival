@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Festival')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+    <h1>Festival</h1>
+
+    <!-- Frammento riusato anche dalla home: una scheda per festival -->
+    <div th:fragment="schede">
+        <p th:if="${#lists.isEmpty(festivals)}" class="nota">Nessun festival in programma.</p>
+        <div class="griglia">
+            <a th:each="festival : ${festivals}" th:href="@{/festivals/{id}(id=${festival.id})}" class="scheda">
+                <h3 th:text="${festival.nome}">Nome festival</h3>
+                <p class="nota">
+                    <span th:text="${festival.citta}">Città</span> ·
+                    <span th:text="${#temporals.format(festival.dataInizio, 'dd/MM/yyyy')}">01/01</span> –
+                    <span th:text="${#temporals.format(festival.dataFine, 'dd/MM/yyyy')}">10/01</span>
+                </p>
+                <p th:text="${festival.descrizione}">Descrizione</p>
+                <span>Dettagli →</span>
+            </a>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

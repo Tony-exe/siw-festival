@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Accedi')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="stretta">
+    <h1>Accedi</h1>
+
+    <p th:if="${messaggio}" class="messaggio" th:text="${messaggio}"></p>
+    <!-- Spring Security reindirizza a /login?error=true (failureUrl) se le credenziali sono sbagliate -->
+    <p th:if="${param.error}" class="errore" th:text="#{login.errore}">Username o password non validi.</p>
+
+    <!-- th:action aggiunge automaticamente il campo nascosto con il token CSRF.
+         Il POST /login è gestito dal filtro di Spring Security, non da un controller. -->
+    <form th:action="@{/login}" method="post">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autofocus>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Accedi</button>
+    </form>
+
+    <p>Non hai un account? <a th:href="@{/register}">Registrati</a></p>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

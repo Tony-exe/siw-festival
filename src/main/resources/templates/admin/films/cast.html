@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cast · ' + ${film.titolo})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+    <p class="percorso"><a th:href="@{/admin/films}">Film</a> / <span th:text="${film.titolo}">Film</span></p>
+    <h1>Cast di <span th:text="${film.titolo}">Film</span></h1>
+    <p class="nota">Regia di <span th:text="${film.regista.nome + ' ' + film.regista.cognome}">Regista</span></p>
+
+    <div class="colonne larga-stretta">
+        <table>
+            <thead><tr><th>Attore</th><th>Personaggio</th><th></th></tr></thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(film.interpretazioni)}">
+                <td colspan="3" class="nota">Nessun attore nel cast.</td>
+            </tr>
+            <tr th:each="interpretazione : ${film.interpretazioni}">
+                <td th:text="${interpretazione.attore.nome + ' ' + interpretazione.attore.cognome}">Attore</td>
+                <td th:text="${interpretazione.personaggio}">Personaggio</td>
+                <td>
+                    <form th:action="@{/admin/films/{id}/cast/{iid}/remove(id=${film.id}, iid=${interpretazione.id})}"
+                          method="post">
+                        <button type="submit" class="pericolo">Rimuovi</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <form th:action="@{/admin/films/{id}/cast(id=${film.id})}" method="post" class="riquadro">
+            <h2>Aggiungi al cast</h2>
+            <label for="attoreId">Attore</label>
+            <select id="attoreId" name="attoreId" required>
+                <option value="">— scegli l'attore —</option>
+                <option th:each="attore : ${attori}" th:value="${attore.id}"
+                        th:text="${attore.cognome + ' ' + attore.nome}">Attore</option>
+            </select>
+            <p class="nota">Non c'è? <a th:href="@{/admin/attori/new}">Inserisci un nuovo attore</a>.</p>
+            <label for="personaggio">Personaggio</label>
+            <input type="text" id="personaggio" name="personaggio" required maxlength="255">
+            <button type="submit">Aggiungi</button>
+        </form>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

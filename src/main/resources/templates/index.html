@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Home')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+    <p th:if="${param.logout}" class="info">Sei uscito.</p>
+
+    <h1>Festival cinematografici</h1>
+    <p>Programmi, film in concorso, proiezioni e recensioni dei festival.</p>
+    <!-- userDetails è messo nel modello di ogni pagina da GlobalController (null per i visitatori anonimi) -->
+    <p th:if="${userDetails}">Bentornato, <strong th:text="${userDetails.username}">utente</strong>.</p>
+
+    <h2>I festival</h2>
+    <div th:replace="~{festivals/list :: schede}"></div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

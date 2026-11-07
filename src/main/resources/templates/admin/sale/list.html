@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Gestione sale')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+    <div class="titolo-pagina">
+        <h1>Sale</h1>
+        <a th:href="@{/admin/sale/new}" class="pulsante">Nuova sala</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr><th>Nome</th><th>Indirizzo</th><th>Capienza</th><th>Azioni</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="sala : ${sale}">
+            <td th:text="${sala.nome}">Nome</td>
+            <td th:text="${sala.indirizzo}">Indirizzo</td>
+            <td th:text="${sala.capienza}">100</td>
+            <td><a th:href="@{/admin/sale/{id}/edit(id=${sala.id})}">Modifica</a></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

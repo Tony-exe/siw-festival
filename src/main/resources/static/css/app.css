@@ -1,0 +1,652 @@
+/* =========================================================================
+   Foglio di stile unico per tutte le pagine Thymeleaf (nessun framework CSS).
+   Lo stile è applicato direttamente ai tag (header, main, form, input, table...),
+   così le pagine restano HTML semplice con pochissime classi.
+   Le poche classi usate sono raccolte in fondo, ognuna con un commento.
+   Colori ripresi dal tema MUI della pagina React (frontend/src/theme/index.ts).
+   ========================================================================= */
+
+/* --- Variabili: per cambiare un colore basta modificarlo qui --- */
+:root {
+    --primario: #1976d2;        /* blu MUI: header, link, pulsanti */
+    --primario-scuro: #115293;
+    --accento: #7d2ae8;         /* viola delle "bolle" dei pulsanti */
+    --sfondo: #f4f6f8;
+    --superficie: #ffffff;      /* sfondo di card, tabelle e form */
+    --testo: #1f2937;
+    --testo-secondario: #6b7280;
+    --bordo: #d1d5db;
+    --bordo-chiaro: #eceff3;
+    --evidenziato: #f5f8fc;     /* riga di tabella o di lista sotto il mouse */
+    --errore: #d32f2f;
+    --errore-sfondo: #fdecea;
+    --successo: #2e7d32;
+    --successo-sfondo: #edf7ed;
+    --info-sfondo: #e8f1fb;
+    --stelle: #f5a623;
+    --raggio: 8px;
+    --ombra: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+    --larghezza: 1100px;        /* larghezza massima del contenuto */
+}
+
+/* --- Base --- */
+* {
+    box-sizing: border-box;     /* padding e bordo inclusi nella larghezza */
+}
+
+/* body in colonna (header, main, footer): il footer ha margin-top: auto e resta in fondo alla finestra */
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: "Roboto", "Segoe UI", Arial, sans-serif;
+    background: var(--sfondo);
+    color: var(--testo);
+    line-height: 1.5;
+}
+
+a {
+    color: var(--primario);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--primario-scuro);
+    text-decoration: underline;
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 1.7rem;
+}
+
+h2 {
+    font-size: 1.3rem;
+}
+
+h3 {
+    font-size: 1.05rem;
+}
+
+/* --- Animazione riutilizzata: comparsa dal basso (card principale e messaggi) --- */
+@keyframes comparsa {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Header e navigazione --- */
+header {
+    background: var(--primario);
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    box-shadow: var(--ombra);
+    position: sticky;           /* l'header resta in alto quando si scorre la pagina */
+    top: 0;
+    z-index: 10;
+}
+
+header .logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-right: auto;         /* spinge la navigazione a destra */
+}
+
+header a,
+header a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 18px;
+}
+
+/* link della nav: una sottolineatura che "cresce" al passaggio del mouse */
+nav a {
+    position: relative;
+    padding: 2px 0;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+}
+
+nav a:hover::after {
+    transform: scaleX(1);
+}
+
+/* il pulsante "Esci" nell'header: bianco su blu, senza bolle */
+header button {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    padding: 4px 14px;
+}
+
+header button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+header button::before,
+header button::after {
+    display: none;
+}
+
+/* --- Contenuto principale: una "card" bianca centrata --- */
+main {
+    width: calc(100% - 48px);
+    max-width: var(--larghezza);
+    margin: 32px auto;
+    padding: 28px 32px;
+    background: var(--superficie);
+    border-radius: var(--raggio);
+    box-shadow: var(--ombra);
+    animation: comparsa 0.4s ease-out;
+}
+
+footer {
+    margin-top: auto;           /* prende tutto lo spazio libero sopra di sé: resta in fondo alla finestra */
+    text-align: center;
+    padding: 16px;
+    color: var(--testo-secondario);
+    font-size: 0.85rem;
+}
+
+/* --- Form --- */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+label {
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--bordo);
+    border-radius: 6px;
+    font: inherit;
+    background: white;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: #9ca3af;
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primario);
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+}
+
+/* messaggi di errore della validazione (gli <span> con th:errors) */
+form span.errore-campo {
+    color: var(--errore);
+    font-size: 0.9rem;
+}
+
+/* il campo con un errore ha il bordo rosso */
+input.campo-errore,
+select.campo-errore,
+textarea.campo-errore {
+    border-color: var(--errore);
+}
+
+/* pulsante e link "Annulla" in fondo alla form */
+form > button {
+    margin-top: 16px;
+    align-self: flex-start;
+}
+
+/* form piccole dentro tabelle, liste e header (Rimuovi, Annulla, Elimina, Esci):
+   restano sulla stessa riga invece di andare in colonna */
+td form,
+li form,
+header form,
+.azioni form {
+    display: inline-flex;
+    margin: 0;
+}
+
+td form > button,
+li form > button,
+.azioni form > button {
+    margin-top: 0;
+}
+
+/* --- Pulsanti (effetto "bolle" da Uiverse.io, di zjssun) --- */
+button,
+.pulsante {
+    position: relative;
+    z-index: 0;                 /* le bolle restano attaccate al pulsante */
+    display: inline-block;
+    padding: 9px 20px;
+    border-radius: 6px;
+    border: none;
+    color: #fff;
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: var(--accento);
+    transition: all 0.2s ease;
+}
+
+/* un link che sembra un pulsante (es. "Nuovo festival") */
+.pulsante:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+button:active,
+.pulsante:active {
+    transform: scale(0.96);
+}
+
+button::before,
+button::after,
+.pulsante::before,
+.pulsante::after {
+    position: absolute;
+    content: "";
+    width: 150%;
+    left: 50%;
+    height: 100%;
+    transform: translateX(-50%);
+    z-index: -1;                /* dietro al testo del pulsante */
+    background-repeat: no-repeat;
+}
+
+button:hover::before,
+.pulsante:hover::before {
+    top: -70%;
+    background-image: radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, transparent 20%, var(--accento) 20%, transparent 30%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, transparent 10%, var(--accento) 15%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%);
+    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+    background-position: 50% 120%;
+    animation: bolleSopra 0.6s ease;
+}
+
+button:hover::after,
+.pulsante:hover::after {
+    bottom: -70%;
+    background-image: radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, transparent 10%, var(--accento) 15%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%),
+        radial-gradient(circle, var(--accento) 20%, transparent 20%);
+    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
+    background-position: 50% 0%;
+    animation: bolleSotto 0.6s ease;
+}
+
+@keyframes bolleSopra {
+    0% {
+        background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
+    }
+    50% {
+        background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
+    }
+    100% {
+        background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+}
+
+@keyframes bolleSotto {
+    0% {
+        background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
+    }
+    50% {
+        background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
+    }
+    100% {
+        background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+}
+
+/* pulsanti piccoli nelle tabelle e nelle liste */
+td button,
+td .pulsante,
+li button,
+.azioni button,
+.azioni .pulsante {
+    padding: 5px 12px;
+    font-size: 0.9rem;
+}
+
+/* azioni distruttive: le form con il confirm() (Rimuovi, Annulla, Elimina) e i pulsanti .pericolo */
+form[onsubmit] button,
+button.pericolo {
+    --accento: var(--errore);
+}
+
+/* azioni secondarie (es. "Completata", "Annulla" di una form) */
+button.secondario,
+.pulsante.secondario {
+    --accento: #546e7a;
+}
+
+/* --- Messaggi di conferma e di errore (flash attribute ed errori globali dei form) --- */
+.messaggio,
+.errore,
+.info {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-weight: 500;
+    border-left: 4px solid currentColor;     /* barretta laterale dello stesso colore del testo */
+    margin: 0 0 16px;
+    animation: comparsa 0.35s ease-out 0.15s both;
+}
+
+.messaggio {
+    background: var(--successo-sfondo);
+    color: var(--successo);
+}
+
+.errore {
+    background: var(--errore-sfondo);
+    color: var(--errore);
+}
+
+.info {
+    background: var(--info-sfondo);
+    color: var(--primario-scuro);
+}
+
+/* --- Liste (cast, festival di un film, proiezioni...) --- */
+main ul {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0;
+}
+
+main li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 14px;
+    padding: 10px;
+    border-bottom: 1px solid var(--bordo-chiaro);
+    border-radius: 6px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+main li:last-child {
+    border-bottom: none;
+}
+
+/* riga della lista evidenziata e leggermente spostata al passaggio del mouse */
+main li:hover {
+    background: var(--evidenziato);
+    transform: translateX(4px);
+}
+
+/* --- Tabelle (elenchi dell'area admin) --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--bordo-chiaro);
+    vertical-align: middle;
+}
+
+th {
+    background: #eef2f7;
+    font-weight: 600;
+}
+
+tbody tr {
+    transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+    background: var(--evidenziato);
+}
+
+/* =========================================================================
+   Classi (le uniche usate nei template)
+   ========================================================================= */
+
+/* logo nell'header */
+.logo {
+    white-space: nowrap;
+}
+
+/* pagina con un solo form (login, registrazione, form di inserimento): card più stretta */
+main.stretta {
+    max-width: 560px;
+}
+
+/* titolo della pagina con un pulsante a destra (es. "Festival" + "Nuovo festival") */
+.titolo-pagina {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.titolo-pagina h1 {
+    margin: 0;
+}
+
+/* percorso di navigazione sopra il titolo: Festival / Festa del Cinema / Film */
+.percorso {
+    font-size: 0.9rem;
+    color: var(--testo-secondario);
+    margin: 0 0 12px;
+}
+
+/* testo piccolo e grigio, per note e informazioni secondarie */
+.nota {
+    color: var(--testo-secondario);
+    font-size: 0.9rem;
+}
+
+/* griglia di schede che si adatta alla larghezza (festival in home, film di un festival, pannello admin) */
+.griglia {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* una scheda: riquadro con bordo blu in alto, si solleva al passaggio del mouse */
+.scheda {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 20px;
+    background: var(--superficie);
+    border: 1px solid var(--bordo-chiaro);
+    border-top: 4px solid var(--primario);
+    border-radius: var(--raggio);
+    color: inherit;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.scheda:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+    text-decoration: none;
+    color: inherit;
+}
+
+.scheda h2,
+.scheda h3,
+.scheda p {
+    margin: 0;
+}
+
+.scheda > :last-child {
+    margin-top: auto;           /* il link "Dettagli" resta in fondo alla scheda */
+}
+
+/* riquadro grigio chiaro dentro la pagina (es. form "Scrivi una recensione") */
+.riquadro {
+    padding: 16px 20px;
+    background: var(--sfondo);
+    border-radius: var(--raggio);
+    margin: 16px 0;
+}
+
+/* due colonne affiancate (diventano una sotto l'altra sul telefono) */
+.colonne {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* colonne 2:1, es. tabella delle proiezioni + form "Programma una proiezione" */
+.colonne.larga-stretta {
+    grid-template-columns: 2fr 1fr;
+}
+
+/* link e pulsanti affiancati (colonna Azioni di una tabella, comandi sotto una recensione) */
+.azioni {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+/* stato di una proiezione: etichetta colorata */
+.stato {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.stato.scheduled {
+    background: var(--primario);
+}
+
+.stato.completed {
+    background: var(--successo);
+}
+
+.stato.cancelled {
+    background: #9e9e9e;
+}
+
+/* proiezione annullata: barrata */
+.annullata {
+    text-decoration: line-through;
+    color: var(--testo-secondario);
+}
+
+/* stelle del voto di una recensione */
+.stelle {
+    color: var(--stelle);
+    letter-spacing: 2px;
+}
+
+/* testo di una recensione: va a capo sotto autore, stelle e data (occupa tutta la riga della lista) */
+.testo-recensione {
+    flex-basis: 100%;
+    margin: 0;
+}
+
+/* pagine di errore: codice grande e centrato */
+.pagina-errore {
+    text-align: center;
+}
+
+.pagina-errore h1 {
+    font-size: 4rem;
+    margin: 0;
+    color: var(--primario);
+}
+
+/* --- Schermi piccoli (telefono) --- */
+@media (max-width: 760px) {
+    main {
+        width: calc(100% - 32px);
+        margin: 16px auto;
+        padding: 20px 16px;
+    }
+
+    header {
+        padding: 12px 16px;
+    }
+
+    .colonne,
+    .colonne.larga-stretta {
+        grid-template-columns: 1fr;
+    }
+
+    /* la tabella scorre in orizzontale invece di uscire dalla pagina */
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+/* --- Accessibilità: chi ha chiesto al sistema operativo meno animazioni non le vede --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
