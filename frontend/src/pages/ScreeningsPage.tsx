@@ -4,7 +4,7 @@ import { Alert, Box, Breadcrumbs, CircularProgress, Link, Typography } from '@mu
 import DateFilter from '../components/DateFilter';
 import ScreeningsTable from '../components/ScreeningsTable';
 import { giorniTra } from '../formato';
-import { ApiError } from '../services/api';
+import { ApiError, BACKEND_URL } from '../services/api';
 import { getFestival, getProgramma } from '../services/festivalService';
 import type { Festival, Proiezione } from '../types';
 
@@ -58,8 +58,8 @@ export default function ScreeningsPage() {
     <>
       {/* Breadcrumbs verso le pagine Thymeleaf: link normali */}
       <Breadcrumbs sx={{ mb: 2 }}>
-        <Link href="/festivals" underline="hover">Festival</Link>
-        {festival && <Link href={`/festivals/${festival.id}`} underline="hover">{festival.nome}</Link>}
+        <Link href={`${BACKEND_URL}/festivals`} underline="hover">Festival</Link>
+        {festival && <Link href={`${BACKEND_URL}/festivals/${festival.id}`} underline="hover">{festival.nome}</Link>}
         <Typography color="text.primary">Programma</Typography>
       </Breadcrumbs>
 

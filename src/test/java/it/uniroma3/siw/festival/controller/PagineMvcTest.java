@@ -134,7 +134,7 @@ class PagineMvcTest {
         mvc.perform(get("/")).andExpect(status().isOk()).andExpect(content().string(containsString("Festa del Cinema")));
         mvc.perform(get("/festivals")).andExpect(status().isOk());
         mvc.perform(get("/festivals/{id}", festivalId)).andExpect(status().isOk())
-                .andExpect(content().string(containsString("/app/festivals/" + festivalId + "/screenings")));
+                .andExpect(content().string(containsString("http://localhost:5173/festivals/" + festivalId + "/screenings")));
         // il regista viene mostrato: deve essere stato caricato dal service (JOIN FETCH)
         mvc.perform(get("/festivals/{id}/films", festivalId)).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Francis Ford Coppola")))

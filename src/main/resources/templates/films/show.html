@@ -53,7 +53,7 @@
                         <span th:text="${p.sala.nome}">Sala</span>
                     </span>
                     <!-- Il programma delle proiezioni è la pagina React -->
-                    <a th:href="@{/app/festivals/{id}/screenings(id=${p.festival.id})}"
+                    <a th:href="@{http://localhost:5173/festivals/{id}/screenings(id=${p.festival.id})}"
                        th:text="${p.festival.nome}">Festival</a>
                     <span th:if="${p.stato.name() != 'SCHEDULED'}"
                           th:class="'stato ' + ${#strings.toLowerCase(p.stato)}" th:text="${p.stato}">STATO</span>

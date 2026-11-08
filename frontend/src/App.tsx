@@ -2,10 +2,11 @@ import { Routes, Route } from 'react-router-dom';
 import { Box, Container, Link, Paper, Typography } from '@mui/material';
 import Navbar from './components/Navbar';
 import ScreeningsPage from './pages/ScreeningsPage';
+import { BACKEND_URL } from './services/api';
 
 /**
  * Componente radice: layout comune (navbar, contenuto, footer) e rotte. Il router decide sul client quale
- * pagina mostrare in base all'URL, senza ricaricare la pagina. Le rotte sono relative a basename "/app".
+ * pagina mostrare in base all'URL, senza ricaricare la pagina.
  * L'unica pagina React è il programma delle proiezioni (sola lettura, pubblica): il dettaglio film e
  * tutti i form sono pagine Thymeleaf.
  */
@@ -19,7 +20,7 @@ export default function App() {
           <Routes>
             <Route path="/festivals/:id/screenings" element={<ScreeningsPage />} />
             <Route path="*" element={
-              <Typography color="text.secondary">Pagina non trovata. <Link href="/">Torna alla home</Link></Typography>
+              <Typography color="text.secondary">Pagina non trovata. <Link href={`${BACKEND_URL}/`}>Torna alla home</Link></Typography>
             } />
           </Routes>
         </Paper>

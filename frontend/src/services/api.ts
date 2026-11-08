@@ -1,14 +1,18 @@
 import axios, { AxiosError } from 'axios';
 
+/** Indirizzo del backend Spring Boot: serve alle chiamate REST e ai link verso le pagine Thymeleaf. */
+export const BACKEND_URL = 'http://localhost:8080';
+
 /*
  * UNICA istanza axios dell'applicazione: la baseURL si scrive una volta sola e tutti i servizi la usano.
- * Le richieste sono sulla stessa origine del backend (in sviluppo grazie al proxy di Vite), quindi il
- * browser invia da solo il cookie di sessione JSESSIONID: è la stessa sessione delle pagine Thymeleaf.
+ * React (porta 5173) e Spring (porta 8080) sono origini diverse, quindi le chiamate passano dal CORS.
+ * withCredentials fa inviare il cookie di sessione JSESSIONID: è la stessa sessione delle pagine Thymeleaf,
+ * perché i cookie non distinguono le porte e localhost resta lo stesso sito.
  */
 const api = axios.create({
-  baseURL: '/rest',
+  baseURL: `${BACKEND_URL}/rest`,
   headers: { Accept: 'application/json' },
-  withCredentials: true, // invia il cookie di sessione anche se il frontend gira su un'altra origine (CORS)
+  withCredentials: true,
 });
 
 export default api;

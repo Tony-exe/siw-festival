@@ -1,9 +1,10 @@
 import { AppBar, Box, Button, Link, Toolbar, Typography } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
+import { BACKEND_URL } from '../services/api';
 
 /**
  * Stesso header delle pagine Thymeleaf (fragments/layout.html): barra blu con il logo a sinistra e i link
- * a destra, così React e Thymeleaf sembrano un'unica applicazione. I link portano alle pagine Thymeleaf
+ * a destra, così React e Thymeleaf sembrano un'unica applicazione. I link portano alle pagine Thymeleaf su Spring
  * con normali href (navigazione completa, non del router).
  */
 export default function Navbar() {
@@ -13,16 +14,16 @@ export default function Navbar() {
   return (
     <AppBar position="sticky" color="primary">
       <Toolbar sx={{ flexWrap: 'wrap', gap: '8px 18px', py: 1 }}>
-        <Link href="/" color="inherit" underline="none" variant="h6" sx={{ fontWeight: 700, mr: 'auto' }}>
+        <Link href={`${BACKEND_URL}/`} color="inherit" underline="none" variant="h6" sx={{ fontWeight: 700, mr: 'auto' }}>
           🎬 Festival
         </Link>
-        <Link href="/festivals" color="inherit" underline="hover">Festival</Link>
+        <Link href={`${BACKEND_URL}/festivals`} color="inherit" underline="hover">Festival</Link>
         {isAdmin && (
           <>
-            <Link href="/admin" color="inherit" underline="hover">Gestione</Link>
-            <Link href="/admin/festivals" color="inherit" underline="hover">Festival e proiezioni</Link>
-            <Link href="/admin/films" color="inherit" underline="hover">Film e cast</Link>
-            <Link href="/admin/sale" color="inherit" underline="hover">Sale</Link>
+            <Link href={`${BACKEND_URL}/admin`} color="inherit" underline="hover">Gestione</Link>
+            <Link href={`${BACKEND_URL}/admin/festivals`} color="inherit" underline="hover">Festival e proiezioni</Link>
+            <Link href={`${BACKEND_URL}/admin/films`} color="inherit" underline="hover">Film e cast</Link>
+            <Link href={`${BACKEND_URL}/admin/sale`} color="inherit" underline="hover">Sale</Link>
           </>
         )}
 
@@ -30,15 +31,15 @@ export default function Navbar() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="body1">Ciao, {utente.username}</Typography>
             {/* Logout = POST a /logout (gestito da Spring Security) */}
-            <form method="post" action="/logout">
+            <form method="post" action={`${BACKEND_URL}/logout`}>
               <Button type="submit" variant="outlined" color="inherit" size="small">Esci</Button>
             </form>
           </Box>
         )}
         {utente && !utente.autenticato && (
           <>
-            <Link href="/login" color="inherit" underline="hover">Accedi</Link>
-            <Link href="/register" color="inherit" underline="hover">Registrati</Link>
+            <Link href={`${BACKEND_URL}/login`} color="inherit" underline="hover">Accedi</Link>
+            <Link href={`${BACKEND_URL}/register`} color="inherit" underline="hover">Registrati</Link>
           </>
         )}
       </Toolbar>

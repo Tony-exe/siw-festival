@@ -120,35 +120,40 @@ classDiagram
   CREATE DATABASE festival_test;
   ```
 - Maven non serve: si usa il wrapper `mvnw` (`./mvnw` in Git Bash/Linux/macOS, `.\mvnw` in PowerShell o cmd).
-  Node.js non serve: la build lo scarica in `frontend/node`.
+- Node.js (LTS) per il frontend React.
 - Nota per Windows: `mvnw.cmd` è stato corretto per funzionare anche se la cartella del progetto contiene
   parentesi quadre (la versione originale del wrapper leggeva i file con `Get-Content` senza `-LiteralPath`).
 
 ## Avvio
+Frontend e backend sono due server separati, da avviare in due terminali.
+
+Backend Spring Boot, su http://localhost:8080:
+
 ```bash
 ./mvnw spring-boot:run
 ```
 
+Frontend React, su http://localhost:5173:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Le pagine Thymeleaf funzionano anche con il solo backend; la pagina React ha bisogno di entrambi. React chiama le API REST
+del backend tramite CORS e condivide la sessione delle pagine Thymeleaf grazie al cookie `JSESSIONID`.
+
 A ogni avvio (profilo `dev`, attivo per default) Hibernate ricrea le tabelle e `import.sql` inserisce sempre gli stessi dati
 di esempio (utenti `admin`/`admin`, `user1`/`user1`, `user2`/`user2`): 3 festival (Venezia già concluso, Roma e Cannes futuri, con date relative al giorno di avvio),
 20 film reali con registi e cast, 5 sale, 44 proiezioni, alcune recensioni.
-
-In alternativa si può creare il jar unico (backend + frontend React) e avviarlo:
-
-```bash
-./mvnw package -DskipTests
-```
-
-```bash
-java -Dnet.bytebuddy.experimental=true -jar target/festival-0.0.1-SNAPSHOT.jar
-```
 
 ### Indirizzi utili
 | Pagina | URL |
 |---|---|
 | Home | http://localhost:8080/ |
 | Festival (Thymeleaf) | http://localhost:8080/festivals |
-| Programma di un festival (React) | http://localhost:8080/app/festivals/2/screenings |
+| Programma di un festival (React) | http://localhost:5173/festivals/2/screenings |
 | Dettaglio film con recensioni (Thymeleaf) | http://localhost:8080/films/1 |
 | Area amministrativa | http://localhost:8080/admin |
 | Documentazione API (Swagger UI) | http://localhost:8080/swagger-ui.html |
@@ -159,18 +164,6 @@ java -Dnet.bytebuddy.experimental=true -jar target/festival-0.0.1-SNAPSHOT.jar
 | admin | admin | ADMIN |
 | user1 | user1 | USER |
 | user2 | user2 | USER |
-
-### Sviluppo del frontend
-Con il backend avviato su 8080, il frontend può girare anche con il server di sviluppo di Vite (ricaricamento
-automatico), che inoltra `/rest`, `/login`, `/logout` e `/css` a Spring Boot:
-
-```bash
-cd frontend && npm run dev
-```
-
-(richiede Node installato, oppure si usa quello scaricato dalla build in `frontend/node`). Le pagine si aprono su
-http://localhost:5173/app/... . Per l'uso normale non serve: `./mvnw package` o `spring-boot:run` servono già la
-versione compilata di React.
 
 ## Test
 ```bash
@@ -187,8 +180,6 @@ versione compilata di React.
   tutte le API REST (compresi i messaggi di validazione in italiano e in inglese);
 - **esperimento sulle strategie di fetch** (vedi sotto), con asserzioni sul numero di query.
 
-Per test più rapidi senza ricompilare il frontend: `./mvnw verify -Dskip.npm -Dskip.installnodenpm`.
-
 ## Esperimento sulle strategie di fetch
 Il test `FetchStrategyExperimentTest` (profilo `experiment`, database `festival_test`) confronta strategie
 diverse per lo stesso caso d'uso, sullo stesso insieme di dati: 1 festival, 100 film con 100 registi tutti
@@ -196,12 +187,6 @@ diversi, 4 sale, 300 proiezioni. Si lancia senza modificare il codice:
 
 ```bash
 ./mvnw test -Dtest=FetchStrategyExperimentTest
-```
-
-Per saltare la build del frontend React (più veloce):
-
-```bash
-./mvnw test -Dtest=FetchStrategyExperimentTest -Dskip.npm -Dskip.installnodenpm
 ```
 
 Per ogni strategia l'esperimento apre una nuova transazione con il persistence context vuoto
@@ -334,7 +319,7 @@ Scelte principali:
 
 ## Struttura del repository
 ```
-├── pom.xml                         dipendenze, build del frontend (frontend-maven-plugin)
+├── pom.xml                         dipendenze del backend
 ├── mvnw, mvnw.cmd, .mvn/           Maven wrapper
 ├── frontend/                       React + TypeScript + Vite (src/: types, services, context, components, pages, theme)
 └── src/
@@ -344,7 +329,7 @@ Scelte principali:
     │   ├── import.sql                         dati di esempio (caricati a ogni avvio)
     │   ├── messages/                          messaggi di validazione e testi (it, en)
     │   ├── templates/                         pagine Thymeleaf
-    │   └── static/                            CSS; static/app è generata dalla build di React
+    │   └── static/                            CSS
     └── test/                                  test e profili test / experiment
 ```
 

@@ -2,6 +2,7 @@ import {
   Chip, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import { formatGiorno, formatOra } from '../formato';
+import { BACKEND_URL } from '../services/api';
 import type { Proiezione, StatoProiezione } from '../types';
 
 const COLORE_STATO: Record<StatoProiezione, 'primary' | 'success' | 'default'> = {
@@ -48,7 +49,7 @@ export default function ScreeningsTable({ proiezioni }: { proiezioni: Proiezione
                     <TableCell>{formatOra(p.ora)}–{formatOra(p.oraFine)}</TableCell>
                     {/* Il dettaglio film è una pagina Thymeleaf: link normale (href), non del router */}
                     <TableCell>
-                      <Link href={`/films/${p.film.id}`}>{p.film.titolo}</Link>
+                      <Link href={`${BACKEND_URL}/films/${p.film.id}`}>{p.film.titolo}</Link>
                     </TableCell>
                     <TableCell>{p.sala.nome}</TableCell>
                     <TableCell><Chip label={p.stato} color={COLORE_STATO[p.stato]} size="small" /></TableCell>

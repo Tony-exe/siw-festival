@@ -3,8 +3,6 @@ target/
 node_modules/
 frontend/dist/
 frontend/node/
-# la build di React viene scritta qui da Vite / frontend-maven-plugin
-src/main/resources/static/app/
 
 # ===== IDE e strumenti personali =====
 .idea/

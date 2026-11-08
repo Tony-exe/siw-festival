@@ -19,7 +19,7 @@
     <div class="azioni">
         <a th:href="@{/festivals/{id}/films(id=${festival.id})}" class="pulsante">Film partecipanti</a>
         <!-- Pagina React (stessa applicazione, stessa sessione) -->
-        <a th:href="@{/app/festivals/{id}/screenings(id=${festival.id})}" class="pulsante">Programma delle proiezioni</a>
+        <a th:href="@{http://localhost:5173/festivals/{id}/screenings(id=${festival.id})}" class="pulsante">Programma delle proiezioni</a>
         <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin/festivals/{id}/proiezioni(id=${festival.id})}"
            class="pulsante secondario">Gestisci programmazione</a>
     </div>

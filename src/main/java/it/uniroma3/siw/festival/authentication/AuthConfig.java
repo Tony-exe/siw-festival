@@ -51,7 +51,7 @@ public class AuthConfig {
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(HttpMethod.GET, "/", "/index", "/login", "/register",
                     "/festivals", "/festivals/**", "/films/**", "/css/**", "/images/**", "/favicon.ico",
-                    "/app", "/app/**", "/rest/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
+                    "/rest/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
                     .permitAll();
             auth.requestMatchers(HttpMethod.POST, "/login", "/register").permitAll();
             auth.requestMatchers("/error").permitAll();
